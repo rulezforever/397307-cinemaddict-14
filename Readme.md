@@ -1,7 +1,7 @@
 # Проект «Киноман»
 
 * Студент: [Ivan Semenov](https://up.htmlacademy.ru/ecmascript/14/user/397307).
-* Наставник: `Неизвестно`.
+* Наставник: [Кирилл Коломин](https://htmlacademy.ru/profile/id633235).
 
 ---
 
