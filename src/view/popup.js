@@ -185,8 +185,3 @@ export const createPopup = (film) => {
   </form>
 </section>`;
 };
-
-
-// <span class="film-details__genre">${genre[0]}</span>
-//                 <span class="film-details__genre">${genre[1]}</span>
-//                 <span class="film-details__genre">${genre[2]}</span>

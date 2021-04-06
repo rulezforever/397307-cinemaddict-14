@@ -74,7 +74,7 @@ export const generateFilm = () => {
     title: getRandomTitle(),
     poster: getRandomPoster(),
     description: generateDescription(),
-    comments: [1, 2],
+    comments: ['1', '2'],
     rating: 8.3,
     date,
     duration: 77,
