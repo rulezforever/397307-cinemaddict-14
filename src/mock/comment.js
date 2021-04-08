@@ -1,9 +1,10 @@
 import { getRandomInteger } from '../utils.js';
 
+const EMOTIONS = ['smile', 'sleeping', 'puke', 'angry'];
+
 const getEmotion = () => {
-  const emotions = ['smile', 'sleeping', 'puke', 'angry'];
-  const randomIndex = getRandomInteger(0, emotions.length - 1);
-  return emotions[randomIndex];
+  const randomIndex = getRandomInteger(0, EMOTIONS.length - 1);
+  return EMOTIONS[randomIndex];
 };
 
 const date = new Date();

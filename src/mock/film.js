@@ -16,34 +16,36 @@ const DESCRIPTION_ITEMS = [
   'In rutrum ac purus sit amet tempus.',
 ];
 
+const TITLES = [
+  'The Dance of Life',
+  'Sagebrush Trail',
+  'The Man with the Golden Arm',
+  'Santa Claus Conquers the Martians',
+  'Popeye the Sailor Meets Sindbad the Sailor',
+  'The Great Flamarion',
+  'Made for Each Other',
+];
+
+const POSTERS = [
+  './images/posters/made-for-each-other.png',
+  './images/posters/popeye-meets-sinbad.png',
+  './images/posters/sagebrush-trail.jpg',
+  './images/posters/santa-claus-conquers-the-martians.jpg',
+  './images/posters/the-dance-of-life.jpg',
+  './images/posters/the-great-flamarion.jpg',
+  './images/posters/the-man-with-the-golden-arm.jpg',
+];
+
 const date = new Date();
 
 const getRandomTitle = () => {
-  const titles = [
-    'The Dance of Life',
-    'Sagebrush Trail',
-    'The Man with the Golden Arm',
-    'Santa Claus Conquers the Martians',
-    'Popeye the Sailor Meets Sindbad the Sailor',
-    'The Great Flamarion',
-    'Made for Each Other',
-  ];
-  const randomIndex = getRandomInteger(0, titles.length - 1);
-  return titles[randomIndex];
+  const randomIndex = getRandomInteger(0, TITLES.length - 1);
+  return TITLES[randomIndex];
 };
 
 const getRandomPoster = () => {
-  const posters = [
-    './images/posters/made-for-each-other.png',
-    './images/posters/popeye-meets-sinbad.png',
-    './images/posters/sagebrush-trail.jpg',
-    './images/posters/santa-claus-conquers-the-martians.jpg',
-    './images/posters/the-dance-of-life.jpg',
-    './images/posters/the-great-flamarion.jpg',
-    './images/posters/the-man-with-the-golden-arm.jpg',
-  ];
-  const randomIndex = getRandomInteger(0, posters.length - 1);
-  return posters[randomIndex];
+  const randomIndex = getRandomInteger(0, POSTERS.length - 1);
+  return POSTERS[randomIndex];
 };
 
 

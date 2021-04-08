@@ -7,7 +7,7 @@ export const createPopup = (film) => {
   const releaseDate = dayjs(date).format('DD MMMM YYYY');
   const runtime = timeConvert(duration);
 
-  const createGenre = () => {
+  const createGenreListTemplate = () => {
     const arr = [];
     for (let i = 0; i < genre.length; i++ ) {
       const template =  `<span class="film-details__genre">${genre[i]}</span>`;
@@ -69,7 +69,7 @@ export const createPopup = (film) => {
             <tr class="film-details__row">
               <td class="film-details__term">Genres</td>
               <td class="film-details__cell">
-              ${createGenre()}
+              ${createGenreListTemplate()}
               </td>
             </tr>
           </table>
