@@ -1,5 +1,5 @@
-export const createFilmsQuantity = () => {
+export const createFilmsQuantity = (filmsQuantity) => {
   return `<p>
-            130 291 movies inside
+            ${filmsQuantity} movies inside
           </p>`;
 };
