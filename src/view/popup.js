@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
-import { timeConvert } from '../utils.js';
+import { timeConvert, createElement } from '../utils.js';
 
-export const createPopup = (film) => {
+const createPopup = (film) => {
   const { title, poster, rating, date, duration, genre, isFavorite, watched, addToWatchlist,
     alternativeTitle, director, writers, actors, country, ageRating, fullDescription } = film;
   const releaseDate = dayjs(date).format('DD MMMM YYYY');
@@ -185,3 +185,25 @@ export const createPopup = (film) => {
   </form>
 </section>`;
 };
+
+export default class Popup {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createPopup(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
