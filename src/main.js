@@ -22,6 +22,7 @@ const siteMainElement = document.querySelector('.main');
 
 const renderFilm = (filmListElement, film) => {
   const filmComponent = new FilmCardView(film);
+  const filmCard = filmComponent.getElement();
   const popupComponent = new PopupView(film);
   const bodyElement = document.body;
   const popup = popupComponent.getElement();
@@ -47,12 +48,12 @@ const renderFilm = (filmListElement, film) => {
     document.removeEventListener('keydown', onEscKeyDown);
   };
 
-  filmComponent.getElement().querySelector('.film-card__poster').addEventListener('click', onFilmClick);
-  filmComponent.getElement().querySelector('.film-card__title').addEventListener('click', onFilmClick);
-  filmComponent.getElement().querySelector('.film-card__comments').addEventListener('click', onFilmClick);
+  filmCard.querySelector('.film-card__poster').addEventListener('click', onFilmClick);
+  filmCard.querySelector('.film-card__title').addEventListener('click', onFilmClick);
+  filmCard.querySelector('.film-card__comments').addEventListener('click', onFilmClick);
   popupComponent.getElement().querySelector('.film-details__close-btn').addEventListener('click', onCloseBtnClick);
 
-  renderElement(filmListElement, filmComponent.getElement(), RenderPosition.BEFOREEND);
+  renderElement(filmListElement, filmCard, RenderPosition.BEFOREEND);
 };
 
 renderTemplate(siteMainElement, new SiteMenuView(filters).getTemplate(), RenderPosition.BEFOREEND);
