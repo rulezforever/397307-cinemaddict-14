@@ -1,7 +1,8 @@
 import dayjs from 'dayjs';
-import { timeConvert } from '../utils.js';
+import { timeConvert, createElement } from '../utils.js';
 
-export const createFilmCard = (film) => {
+
+const createFilmCard = (film) => {
   const {title, poster, description, rating, date, duration, genre, isFavorite, watched, addToWatchlist} = film;
   const dateYear = dayjs(date).format('YYYY');
   const runtime = timeConvert(duration);
@@ -33,3 +34,26 @@ export const createFilmCard = (film) => {
     </div>
   </article>`;
 };
+
+export default class FilmCard {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmCard(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
