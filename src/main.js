@@ -10,7 +10,7 @@ import FilmsQuantityView from './view/fims-quantity.js';
 import PopupView from './view/popup.js';
 import { generateFilm } from './mock/film.js';
 import { generateFilter } from './mock/filter.js';
-import { renderTemplate, renderElement, RenderPosition } from './utils.js';
+import { renderTemplate, renderElement, RenderPosition } from './utils/render.js';
 
 const CARD_COUNT = 5;
 const FILMS_COUNT = 20;
@@ -48,10 +48,21 @@ const renderFilm = (filmListElement, film) => {
     document.removeEventListener('keydown', onEscKeyDown);
   };
 
-  filmCard.querySelector('.film-card__poster').addEventListener('click', onFilmClick);
-  filmCard.querySelector('.film-card__title').addEventListener('click', onFilmClick);
-  filmCard.querySelector('.film-card__comments').addEventListener('click', onFilmClick);
-  popupComponent.getElement().querySelector('.film-details__close-btn').addEventListener('click', onCloseBtnClick);
+  filmComponent.setPosterClickHandler( () => {
+    onFilmClick();
+  });
+
+  filmComponent.setTitleClickHandler( () => {
+    onFilmClick();
+  });
+
+  filmComponent.setCommentsClickHandler( () => {
+    onFilmClick();
+  });
+
+  popupComponent.setCloseClickHandler( () => {
+    onCloseBtnClick();
+  });
 
   renderElement(filmListElement, filmCard, RenderPosition.BEFOREEND);
 };
@@ -69,8 +80,7 @@ if (FILMS_COUNT === 0) {
     let renderedFilmCount = CARD_COUNT;
     const showMoreBtnComponent = new ShowMoreBtnView();
     renderElement(filmsListElement, showMoreBtnComponent.getElement(), RenderPosition.BEFOREEND);
-    showMoreBtnComponent.getElement().addEventListener('click', (evt) => {
-      evt.preventDefault();
+    showMoreBtnComponent.setClickHandler( () => {
       films
         .slice(renderedFilmCount, renderedFilmCount + CARD_COUNT)
         .forEach((film) => renderFilm(filmsListContainerElement, film));

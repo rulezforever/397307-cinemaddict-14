@@ -1,4 +1,4 @@
-import { getRandomInteger } from '../utils.js';
+import { getRandomInteger } from '../utils/common.js';
 
 const DESCRIPTION_MAX_LENGTH = 140;
 const MAX_RANDOM_QUANTITY = 5;
