@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
-import { timeConvert, createElement } from '../utils.js';
+import { timeConvert } from '../utils/common.js';
+import AbstractView from './abstract.js';
 
 
 const createFilmCard = (film) => {
@@ -35,25 +36,34 @@ const createFilmCard = (film) => {
   </article>`;
 };
 
-export default class FilmCard {
+export default class FilmCard extends AbstractView {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
+    this._editClickHandler = this._editClickHandler.bind(this);
   }
 
   getTemplate() {
     return createFilmCard(this._film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _editClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.editClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setPosterClickHandler(callback) {
+    this._callback.editClick = callback;
+    this.getElement().querySelector('.film-card__poster').addEventListener('click', this._editClickHandler);
+  }
+
+  setTitleClickHandler(callback) {
+    this._callback.editClick = callback;
+    this.getElement().querySelector('.film-card__title').addEventListener('click', this._editClickHandler);
+  }
+
+  setCommentsClickHandler(callback) {
+    this._callback.editClick = callback;
+    this.getElement().querySelector('.film-card__comments').addEventListener('click', this._editClickHandler);
   }
 }
