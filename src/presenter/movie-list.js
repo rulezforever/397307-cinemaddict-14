@@ -2,11 +2,11 @@ import SortView from '../view/sort.js';
 import NoFilmView from '../view/no-film.js';
 import FilmsSectionView from '../view/films.js';
 import ShowMoreBtnView from '../view/show-more-btn.js';
-import FilmCardView from '../view/film-card.js';
-import PopupView from '../view/popup.js';
 import UserProfileView from '../view/user.js';
 import ExtraSectionsView from '../view/films-extra.js';
-import { renderTemplate, renderElement, RenderPosition } from '../utils/render.js';
+import MoviePresenter from './movie.js';
+import { updateItem } from '../utils/common.js';
+import { renderTemplate, renderElement, RenderPosition, remove } from '../utils/render.js';
 
 const CARD_COUNT = 5;
 const FILMS_COUNT = 20;
@@ -16,6 +16,8 @@ const FILMS_COUNT_EXTRA = 2;
 export default class MovieList {
   constructor(movieContainer) {
     this._movieContainer = movieContainer;
+    this._renderedFilmCount = CARD_COUNT;
+    this._moviePresenter = {};
 
     this._filmsSectionComponent = new FilmsSectionView();
     this._sortComponent = new SortView();
@@ -23,6 +25,9 @@ export default class MovieList {
     this._noFilmComponent = new NoFilmView();
     this._userProfileComponent = new UserProfileView();
     this._extraSectionsComponent = new ExtraSectionsView();
+
+    this._handleFilmChange = this._handleFilmChange.bind(this);
+    // this._handleShowMoreBtnClick = this._handleShowMoreBtnClick.bind(this);
   }
 
   init(boardFilms) {
@@ -35,39 +40,9 @@ export default class MovieList {
   }
 
   _renderFilm(filmListElement, film) {
-    const filmComponent = new FilmCardView(film);
-    const filmCard = filmComponent.getElement();
-    const popupComponent = new PopupView(film);
-    const bodyElement = document.body;
-    const popup = popupComponent.getElement();
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        bodyElement.removeChild(popup);
-        bodyElement.classList.remove('hide-overflow');
-        document.removeEventListener('keydown', onEscKeyDown);
-      }
-    };
-
-    const onFilmClick = () => {
-      bodyElement.appendChild(popup);
-      bodyElement.classList.add('hide-overflow');
-      document.addEventListener('keydown', onEscKeyDown);
-    };
-
-    const onCloseBtnClick = () => {
-      bodyElement.removeChild(popup);
-      bodyElement.classList.remove('hide-overflow');
-      document.removeEventListener('keydown', onEscKeyDown);
-    };
-
-    filmComponent.setPosterClickHandler(onFilmClick);
-    filmComponent.setTitleClickHandler(onFilmClick);
-    filmComponent.setCommentsClickHandler(onFilmClick);
-    popupComponent.setCloseClickHandler(onCloseBtnClick);
-
-    renderElement(filmListElement, filmCard, RenderPosition.BEFOREEND);
+    const moviePresenter = new MoviePresenter(filmListElement, this._handleFilmChange);
+    moviePresenter.init(film);
+    this._moviePresenter[film.id] = moviePresenter;
   }
 
   _renderFilms(from, to) {
@@ -75,6 +50,29 @@ export default class MovieList {
       .slice(from, to)
       .forEach((boardFilm) => this._renderFilm(boardFilm));
   }
+
+  _clearFilmList() {
+    Object
+      .values(this._moviePresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._moviePresenter = {};
+    this._renderedFilmCount = CARD_COUNT;
+    remove(this._showMoreBtnComponent);
+  }
+
+  _handleFilmChange(updatedFilm) {
+    this._boardFilms = updateItem(this._boardFilms, updatedFilm);
+    this._moviePresenter[updatedFilm.id].init(updatedFilm);
+  }
+
+  // _handleShowMoreBtnClick() {
+  //   this._renderFilms(this._renderedFilmCount, this._renderedFilmCount + CARD_COUNT);
+  //   this._renderedFilmCount += CARD_COUNT;
+
+  //   if (this._renderedFilmCount >= this._boardFilms.length) {
+  //     remove(this._showMoreBtnComponent);
+  //   }
+  // }
 
   _renderNoFilm() {
     renderElement(this._movieContainer, this._noFilmComponent.getElement(), RenderPosition.BEFOREEND);
@@ -89,28 +87,32 @@ export default class MovieList {
     const filmsListElement = this._movieContainer.querySelector('.films-list');
     const filmsListContainerElement = this._movieContainer.querySelector('.films-list__container');
     if (this._boardFilms.length > CARD_COUNT) {
-      let renderedFilmCount = CARD_COUNT;
       renderElement(filmsListElement, this._showMoreBtnComponent.getElement(), RenderPosition.BEFOREEND);
       this._showMoreBtnComponent.setClickHandler(() => {
         this._boardFilms
-          .slice(renderedFilmCount, renderedFilmCount + CARD_COUNT)
+          .slice(this._renderedFilmCount, this._renderedFilmCount + CARD_COUNT)
           .forEach((film) => this._renderFilm(filmsListContainerElement, film));
 
-        renderedFilmCount += CARD_COUNT;
+        this._renderedFilmCount += CARD_COUNT;
 
-        if (renderedFilmCount >= this._boardFilms.length) {
-          this._showMoreBtnComponent.getElement().remove();
+        if (this._renderedFilmCount >= this._boardFilms.length) {
+          remove(this._showMoreBtnComponent);
         }
       });
+      // this._showMoreBtnComponent.setClickHandler(this._handleShowMoreBtnClick);
     }
   }
-  // в методах _renderShowMoreBtn, _renderShowMoreBtn, и _renderFilmsList приходится создавать константу filmsListContainerElement,
+  // в методах _renderShowMoreBtn и _renderFilmsList приходится создавать константу filmsListContainerElement,
   // правильно ли это, или есть какой-то другой путь?
   _renderFilmsList() {
     const filmsListContainerElement = this._movieContainer.querySelector('.films-list__container');
     for (let i = 0; i < Math.min(this._boardFilms.length, CARD_COUNT); i++) {
       this._renderFilm(filmsListContainerElement, this._boardFilms[i]);
     }
+    // this._renderFilms(0, Math.min(this._boardFilms.length, CARD_COUNT));
+    // if (this._boardFilms.length > CARD_COUNT) {
+    //   this._renderShowMoreBtn();
+    // }
   }
 
   _renderUserProfile() {
