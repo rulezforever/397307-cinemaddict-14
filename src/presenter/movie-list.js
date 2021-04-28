@@ -137,9 +137,9 @@ export default class MovieList {
     } else {
       this._renderSort();
       this._renderFilmsSection();
+      this._renderFilmsList();
       this._renderShowMoreBtn();
       this._renderUserProfile();
-      this._renderFilmsList();
       this._renderExtraSections();
     }
   }

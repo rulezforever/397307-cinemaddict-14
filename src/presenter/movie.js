@@ -16,7 +16,7 @@ export default class Movie {
 
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
-    this._handleAddToWatchlistClick = this._handleWatchedClick.bind(this);
+    this._handleAddToWatchlistClick = this._handleAddToWatchlistClick.bind(this);
   }
 
   init(film) {
@@ -39,8 +39,6 @@ export default class Movie {
     this._filmComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._filmComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._filmComponent.setAddToWatchlistClickHandler(this._handleAddToWatchlistClick);
-
-    renderElement(this._filmListContainer, this._filmCard, RenderPosition.BEFOREEND);
 
     if (prevFilmComponent === null || prevPopupComponent === null) {
       renderElement(this._filmListContainer, this._filmCard, RenderPosition.BEFOREEND);
