@@ -4,7 +4,7 @@ import FilmsSectionView from '../view/films.js';
 import ShowMoreBtnView from '../view/show-more-btn.js';
 import UserProfileView from '../view/user.js';
 import ExtraSectionsView from '../view/films-extra.js';
-import FilmsListView from '../view/films-list.js';
+// import FilmsListView from '../view/films-list.js';
 import MoviePresenter from './movie.js';
 import { updateItem } from '../utils/common.js';
 import { renderTemplate, renderElement, RenderPosition, remove } from '../utils/render.js';
@@ -26,7 +26,7 @@ export default class MovieList {
     this._noFilmComponent = new NoFilmView();
     this._userProfileComponent = new UserProfileView();
     this._extraSectionsComponent = new ExtraSectionsView();
-    this._filmsListComponent =  new FilmsListView();
+    this._filmsListComponent = this._filmsSectionComponent.getElement().querySelector('.films-list__container');
 
     this._handleFilmChange = this._handleFilmChange.bind(this);
     this._handleShowMoreBtnClick = this._handleShowMoreBtnClick.bind(this);
@@ -41,8 +41,8 @@ export default class MovieList {
     renderTemplate(this._movieContainer, this._sortComponent.getTemplate(), RenderPosition.BEFOREEND);
   }
 
-  _renderFilm(film) {
-    const moviePresenter = new MoviePresenter(this._filmsListComponent, this._handleFilmChange);
+  _renderFilm(filmsContainer, film) {
+    const moviePresenter = new MoviePresenter(filmsContainer, this._handleFilmChange);
     moviePresenter.init(film);
     this._moviePresenter[film.id] = moviePresenter;
   }
@@ -50,7 +50,7 @@ export default class MovieList {
   _renderFilms(from, to) {
     this._boardFilms
       .slice(from, to)
-      .forEach((boardFilm) => this._renderFilm(boardFilm));
+      .forEach((boardFilm) => this._renderFilm(this._filmsListComponent, boardFilm));
   }
 
   _clearFilmList() {

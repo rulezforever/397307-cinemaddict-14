@@ -45,11 +45,11 @@ export default class Movie {
       return;
     }
 
-    if (this._filmListContainer.getElement().contains(prevFilmComponent.getElement())) {
+    if (this._filmListContainer.contains(prevFilmComponent.getElement())) {
       replace(this._filmComponent, prevFilmComponent);
     }
 
-    if (this._filmListContainer.getElement().contains(prevPopupComponent.getElement())) {
+    if (this._filmListContainer.contains(prevPopupComponent.getElement())) {
       replace(this._popupComponent, prevPopupComponent);
     }
 
