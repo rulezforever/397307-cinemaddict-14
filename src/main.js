@@ -3,7 +3,7 @@ import FilmsQuantityView from './view/fims-quantity.js';
 import { generateFilm } from './mock/film.js';
 import { generateFilter } from './mock/filter.js';
 import { renderTemplate, renderElement, RenderPosition } from './utils/render.js';
-import BoardPresenter from './presenter/movie-list.js';
+import MovieListPresenter from './presenter/movie-list.js';
 
 const FILMS_COUNT = 20;
 
@@ -13,8 +13,8 @@ const siteMainElement = document.querySelector('.main');
 
 renderTemplate(siteMainElement, new SiteMenuView(filters).getTemplate(), RenderPosition.BEFOREEND);
 
-const boardPresenter = new BoardPresenter(siteMainElement);
+const movieListPresenter = new MovieListPresenter(siteMainElement);
 const footerStatisticsElement = document.querySelector('.footer__statistics');
 renderElement(footerStatisticsElement, new FilmsQuantityView(FILMS_COUNT).getElement(), RenderPosition.BEFOREEND);
 
-boardPresenter.init(films);
+movieListPresenter.init(films);

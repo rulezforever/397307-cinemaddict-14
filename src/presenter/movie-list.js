@@ -4,6 +4,7 @@ import FilmsSectionView from '../view/films.js';
 import ShowMoreBtnView from '../view/show-more-btn.js';
 import UserProfileView from '../view/user.js';
 import ExtraSectionsView from '../view/films-extra.js';
+import FilmsListView from '../view/films-list.js';
 import MoviePresenter from './movie.js';
 import { updateItem } from '../utils/common.js';
 import { renderTemplate, renderElement, RenderPosition, remove } from '../utils/render.js';
@@ -25,9 +26,10 @@ export default class MovieList {
     this._noFilmComponent = new NoFilmView();
     this._userProfileComponent = new UserProfileView();
     this._extraSectionsComponent = new ExtraSectionsView();
+    this._filmsListComponent =  new FilmsListView();
 
     this._handleFilmChange = this._handleFilmChange.bind(this);
-    // this._handleShowMoreBtnClick = this._handleShowMoreBtnClick.bind(this);
+    this._handleShowMoreBtnClick = this._handleShowMoreBtnClick.bind(this);
   }
 
   init(boardFilms) {
@@ -39,8 +41,8 @@ export default class MovieList {
     renderTemplate(this._movieContainer, this._sortComponent.getTemplate(), RenderPosition.BEFOREEND);
   }
 
-  _renderFilm(filmListElement, film) {
-    const moviePresenter = new MoviePresenter(filmListElement, this._handleFilmChange);
+  _renderFilm(film) {
+    const moviePresenter = new MoviePresenter(this._filmsListComponent, this._handleFilmChange);
     moviePresenter.init(film);
     this._moviePresenter[film.id] = moviePresenter;
   }
@@ -65,14 +67,14 @@ export default class MovieList {
     this._moviePresenter[updatedFilm.id].init(updatedFilm);
   }
 
-  // _handleShowMoreBtnClick() {
-  //   this._renderFilms(this._renderedFilmCount, this._renderedFilmCount + CARD_COUNT);
-  //   this._renderedFilmCount += CARD_COUNT;
+  _handleShowMoreBtnClick() {
+    this._renderFilms(this._renderedFilmCount, this._renderedFilmCount + CARD_COUNT);
+    this._renderedFilmCount += CARD_COUNT;
 
-  //   if (this._renderedFilmCount >= this._boardFilms.length) {
-  //     remove(this._showMoreBtnComponent);
-  //   }
-  // }
+    if (this._renderedFilmCount >= this._boardFilms.length) {
+      remove(this._showMoreBtnComponent);
+    }
+  }
 
   _renderNoFilm() {
     renderElement(this._movieContainer, this._noFilmComponent.getElement(), RenderPosition.BEFOREEND);
@@ -85,34 +87,32 @@ export default class MovieList {
 
   _renderShowMoreBtn() {
     const filmsListElement = this._movieContainer.querySelector('.films-list');
-    const filmsListContainerElement = this._movieContainer.querySelector('.films-list__container');
+    // const filmsListContainerElement = this._movieContainer.querySelector('.films-list__container');
     if (this._boardFilms.length > CARD_COUNT) {
       renderElement(filmsListElement, this._showMoreBtnComponent.getElement(), RenderPosition.BEFOREEND);
-      this._showMoreBtnComponent.setClickHandler(() => {
-        this._boardFilms
-          .slice(this._renderedFilmCount, this._renderedFilmCount + CARD_COUNT)
-          .forEach((film) => this._renderFilm(filmsListContainerElement, film));
+      // this._showMoreBtnComponent.setClickHandler(() => {
+      //   this._boardFilms
+      //     .slice(this._renderedFilmCount, this._renderedFilmCount + CARD_COUNT)
+      //     .forEach((film) => this._renderFilm(filmsListContainerElement, film));
 
-        this._renderedFilmCount += CARD_COUNT;
+      //   this._renderedFilmCount += CARD_COUNT;
 
-        if (this._renderedFilmCount >= this._boardFilms.length) {
-          remove(this._showMoreBtnComponent);
-        }
-      });
-      // this._showMoreBtnComponent.setClickHandler(this._handleShowMoreBtnClick);
+      //   if (this._renderedFilmCount >= this._boardFilms.length) {
+      //     remove(this._showMoreBtnComponent);
+      //   }
+      // });
+      this._showMoreBtnComponent.setClickHandler(this._handleShowMoreBtnClick);
     }
   }
-  // в методах _renderShowMoreBtn и _renderFilmsList приходится создавать константу filmsListContainerElement,
-  // правильно ли это, или есть какой-то другой путь?
   _renderFilmsList() {
-    const filmsListContainerElement = this._movieContainer.querySelector('.films-list__container');
-    for (let i = 0; i < Math.min(this._boardFilms.length, CARD_COUNT); i++) {
-      this._renderFilm(filmsListContainerElement, this._boardFilms[i]);
-    }
-    // this._renderFilms(0, Math.min(this._boardFilms.length, CARD_COUNT));
-    // if (this._boardFilms.length > CARD_COUNT) {
-    //   this._renderShowMoreBtn();
+    // const filmsListContainerElement = this._movieContainer.querySelector('.films-list__container');
+    // for (let i = 0; i < Math.min(this._boardFilms.length, CARD_COUNT); i++) {
+    //   this._renderFilm(filmsListContainerElement, this._boardFilms[i]);
     // }
+    this._renderFilms(0, Math.min(this._boardFilms.length, CARD_COUNT));
+    if (this._boardFilms.length > CARD_COUNT) {
+      this._renderShowMoreBtn();
+    }
   }
 
   _renderUserProfile() {
