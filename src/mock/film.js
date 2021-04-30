@@ -1,4 +1,5 @@
 import { getRandomInteger } from '../utils/common.js';
+import {nanoid} from 'nanoid';
 
 const DESCRIPTION_MAX_LENGTH = 140;
 const MAX_RANDOM_QUANTITY = 5;
@@ -73,6 +74,7 @@ const generateFullDescription = () => {
 
 export const generateFilm = () => {
   return {
+    id: nanoid(),
     title: getRandomTitle(),
     poster: getRandomPoster(),
     description: generateDescription(),

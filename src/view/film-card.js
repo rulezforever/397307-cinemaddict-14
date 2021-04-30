@@ -4,7 +4,7 @@ import AbstractView from './abstract.js';
 
 
 const createFilmCard = (film) => {
-  const {title, poster, description, rating, date, duration, genre, isFavorite, watched, addToWatchlist} = film;
+  const { title, poster, description, rating, date, duration, genre, isFavorite, watched, addToWatchlist } = film;
   const dateYear = dayjs(date).format('YYYY');
   const runtime = timeConvert(duration);
   const addToWatchlistClassName = addToWatchlist
@@ -41,6 +41,9 @@ export default class FilmCard extends AbstractView {
     super();
     this._film = film;
     this._editClickHandler = this._editClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._watchedClickHandler = this._watchedClickHandler.bind(this);
+    this._addToWatchlistClickHandler = this._addToWatchlistClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -50,6 +53,36 @@ export default class FilmCard extends AbstractView {
   _editClickHandler(evt) {
     evt.preventDefault();
     this._callback.editClick();
+  }
+
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  }
+
+  _watchedClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.watchedClick();
+  }
+
+  _addToWatchlistClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.addToWatchlistClick();
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector('.film-card__controls-item--favorite').addEventListener('click', this._favoriteClickHandler);
+  }
+
+  setWatchedClickHandler(callback) {
+    this._callback.watchedClick = callback;
+    this.getElement().querySelector('.film-card__controls-item--mark-as-watched').addEventListener('click', this._watchedClickHandler);
+  }
+
+  setAddToWatchlistClickHandler(callback) {
+    this._callback.addToWatchlistClick = callback;
+    this.getElement().querySelector('.film-card__controls-item--add-to-watchlist').addEventListener('click', this._addToWatchlistClickHandler);
   }
 
   setPosterClickHandler(callback) {
