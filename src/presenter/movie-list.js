@@ -4,7 +4,6 @@ import FilmsSectionView from '../view/films.js';
 import ShowMoreBtnView from '../view/show-more-btn.js';
 import UserProfileView from '../view/user.js';
 import ExtraSectionsView from '../view/films-extra.js';
-// import FilmsListView from '../view/films-list.js';
 import MoviePresenter from './movie.js';
 import { updateItem } from '../utils/common.js';
 import { renderTemplate, renderElement, RenderPosition, remove } from '../utils/render.js';
@@ -84,31 +83,14 @@ export default class MovieList {
     renderElement(this._movieContainer, this._filmsSectionComponent.getElement(), RenderPosition.BEFOREEND);
   }
 
-
   _renderShowMoreBtn() {
     const filmsListElement = this._movieContainer.querySelector('.films-list');
-    // const filmsListContainerElement = this._movieContainer.querySelector('.films-list__container');
     if (this._boardFilms.length > CARD_COUNT) {
       renderElement(filmsListElement, this._showMoreBtnComponent.getElement(), RenderPosition.BEFOREEND);
-      // this._showMoreBtnComponent.setClickHandler(() => {
-      //   this._boardFilms
-      //     .slice(this._renderedFilmCount, this._renderedFilmCount + CARD_COUNT)
-      //     .forEach((film) => this._renderFilm(filmsListContainerElement, film));
-
-      //   this._renderedFilmCount += CARD_COUNT;
-
-      //   if (this._renderedFilmCount >= this._boardFilms.length) {
-      //     remove(this._showMoreBtnComponent);
-      //   }
-      // });
       this._showMoreBtnComponent.setClickHandler(this._handleShowMoreBtnClick);
     }
   }
   _renderFilmsList() {
-    // const filmsListContainerElement = this._movieContainer.querySelector('.films-list__container');
-    // for (let i = 0; i < Math.min(this._boardFilms.length, CARD_COUNT); i++) {
-    //   this._renderFilm(filmsListContainerElement, this._boardFilms[i]);
-    // }
     this._renderFilms(0, Math.min(this._boardFilms.length, CARD_COUNT));
     if (this._boardFilms.length > CARD_COUNT) {
       this._renderShowMoreBtn();
