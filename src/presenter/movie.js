@@ -2,13 +2,20 @@ import FilmCardView from '../view/film-card.js';
 import PopupView from '../view/popup.js';
 import { renderElement, RenderPosition, replace, remove } from '../utils/render.js';
 
+const Mode = {
+  DEFAULT: 'POPUP CLOSED',
+  OPEN: 'POPUP OPEN',
+};
+
 export default class Movie {
-  constructor(filmListContainer, changeData) {
+  constructor(filmListContainer, changeData, changeMode) {
     this._filmListContainer = filmListContainer;
     this._changeData = changeData;
+    this._changeMode = changeMode;
 
     this._popupComponent =  null;
     this._filmComponent = null;
+    this._mode = Mode.DEFAULT;
 
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handleFilmClick = this._handleFilmClick.bind(this);
@@ -45,11 +52,11 @@ export default class Movie {
       return;
     }
 
-    if (this._filmListContainer.contains(prevFilmComponent.getElement())) {
+    if (this._mode === Mode.DEFAULT) {
       replace(this._filmComponent, prevFilmComponent);
     }
 
-    if (this._filmListContainer.contains(prevPopupComponent.getElement())) {
+    if (this._mode === Mode.OPEN) {
       replace(this._popupComponent, prevPopupComponent);
     }
 
@@ -62,6 +69,11 @@ export default class Movie {
     remove(this._popupComponent);
   }
 
+  resetView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._handleCloseBtnClick();
+    }
+  }
 
   _handleFavoriteClick() {
     this._changeData(
@@ -102,9 +114,7 @@ export default class Movie {
   _escKeyDownHandler(evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
-      this._bodyElement.removeChild(this._popup);
-      this._bodyElement.classList.remove('hide-overflow');
-      document.removeEventListener('keydown', this._escKeyDownHandler);
+      this._handleCloseBtnClick();
     }
   }
 
@@ -112,11 +122,14 @@ export default class Movie {
     this._bodyElement.appendChild(this._popup);
     this._bodyElement.classList.add('hide-overflow');
     document.addEventListener('keydown', this._escKeyDownHandler);
+    this._changeMode();
+    this._mode = Mode.OPEN;
   }
 
   _handleCloseBtnClick() {
     this._bodyElement.removeChild(this._popup);
     this._bodyElement.classList.remove('hide-overflow');
     document.removeEventListener('keydown', this._escKeyDownHandler);
+    this._mode = Mode.DEFAULT;
   }
 }

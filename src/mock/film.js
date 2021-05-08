@@ -79,7 +79,7 @@ export const generateFilm = () => {
     poster: getRandomPoster(),
     description: generateDescription(),
     comments: ['1', '2'],
-    rating: 8.3,
+    rating: getRandomInteger(0,10),
     date,
     duration: 77,
     genre: ['Western', 'Drama'],

@@ -7,6 +7,8 @@ import ExtraSectionsView from '../view/films-extra.js';
 import MoviePresenter from './movie.js';
 import { updateItem } from '../utils/common.js';
 import { renderTemplate, renderElement, RenderPosition, remove } from '../utils/render.js';
+import { sortDate, sortRating } from '../utils/film.js';
+import { SortType } from '../const.js';
 
 const CARD_COUNT = 5;
 const FILMS_COUNT = 20;
@@ -18,6 +20,7 @@ export default class MovieList {
     this._movieContainer = movieContainer;
     this._renderedFilmCount = CARD_COUNT;
     this._moviePresenter = {};
+    this._currentSortType = SortType.DEFAULT;
 
     this._filmsSectionComponent = new FilmsSectionView();
     this._sortComponent = new SortView();
@@ -29,19 +32,38 @@ export default class MovieList {
 
     this._handleFilmChange = this._handleFilmChange.bind(this);
     this._handleShowMoreBtnClick = this._handleShowMoreBtnClick.bind(this);
+    this._handleModeChange = this._handleModeChange.bind(this);
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
   init(boardFilms) {
     this._boardFilms = boardFilms.slice();
+    this._sourcedBoardFilms = boardFilms.slice();
     this._renderBoard();
+  }
+
+  _handleSortTypeChange(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+    this._sortFilms(sortType);
+    this._clearFilmList();
+    this._renderFilmsList();
+  }
+
+  _handleModeChange() {
+    Object
+      .values(this._moviePresenter)
+      .forEach((presenter) => presenter.resetView());
   }
 
   _renderSort() {
     renderTemplate(this._movieContainer, this._sortComponent.getTemplate(), RenderPosition.BEFOREEND);
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
   _renderFilm(filmsContainer, film) {
-    const moviePresenter = new MoviePresenter(filmsContainer, this._handleFilmChange);
+    const moviePresenter = new MoviePresenter(filmsContainer, this._handleFilmChange, this._handleModeChange);
     moviePresenter.init(film);
     this._moviePresenter[film.id] = moviePresenter;
   }
@@ -63,7 +85,23 @@ export default class MovieList {
 
   _handleFilmChange(updatedFilm) {
     this._boardFilms = updateItem(this._boardFilms, updatedFilm);
+    this._sourcedBoardFilms = updateItem(this._sourcedBoardFilms, updatedFilm);
     this._moviePresenter[updatedFilm.id].init(updatedFilm);
+  }
+
+  _sortFilms(sortType) {
+    switch (sortType) {
+      case SortType.DATE:
+        this._boardFilms.sort(sortDate);
+        break;
+      case SortType.RATING:
+        this._boardFilms.sort(sortRating);
+        break;
+      default:
+        this._boardFilms = this._sourcedBoardFilms.slice();
+    }
+
+    this._currentSortType = sortType;
   }
 
   _handleShowMoreBtnClick() {
