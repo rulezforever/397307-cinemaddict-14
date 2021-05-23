@@ -100,3 +100,5 @@ export default class FilmCard extends AbstractView {
     this.getElement().querySelector('.film-card__comments').addEventListener('click', this._editClickHandler);
   }
 }
+
+///------------------------------
